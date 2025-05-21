@@ -1,25 +1,26 @@
-//your JS code here. If required.
-const sounds = ['sound1', 'sound2', 'sound3']; // Add more sound names if needed
+const sounds = ['sound1', 'sound2', 'sound3', 'sound4', 'sound5', 'sound6'];
 
 const buttonsContainer = document.getElementById('buttons');
 
-// Function to stop all sounds
 function stopSounds() {
   sounds.forEach(sound => {
     const audio = document.getElementById(sound);
+    if (!audio) return;
     audio.pause();
     audio.currentTime = 0;
   });
 }
 
-// Create a button for each sound
 sounds.forEach(sound => {
   const btn = document.createElement('button');
   btn.className = 'btn';
   btn.innerText = sound;
   btn.addEventListener('click', () => {
     stopSounds();
-    document.getElementById(sound).play();
+    const audio = document.getElementById(sound);
+    if (audio) {
+      audio.play().catch(e => console.error(`Error playing ${sound}:`, e));
+    }
   });
 
   buttonsContainer.appendChild(btn);
@@ -27,13 +28,12 @@ sounds.forEach(sound => {
   const audio = document.createElement('audio');
   audio.src = `sounds/${sound}.mp3`;
   audio.id = sound;
+  audio.onerror = () => console.error(`Audio file ${sound}.mp3 could not be loaded.`);
   document.body.appendChild(audio);
 });
 
-// Add a stop button
 const stopBtn = document.createElement('button');
 stopBtn.className = 'stop';
 stopBtn.innerText = 'Stop';
 stopBtn.addEventListener('click', stopSounds);
-
 buttonsContainer.appendChild(stopBtn);
